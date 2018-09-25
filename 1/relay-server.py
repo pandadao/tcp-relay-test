@@ -8,7 +8,7 @@ import socket, thread
 MSG_SIZE = 4096
 
 def usage():
-    print "Usage: ./relayserver [port]"
+    print "Usage: ./relayserver [0.0.0.0 or localhost] [port]"
     sys.exit(1)
 
 # 1. create a new socket connection
@@ -73,3 +73,23 @@ def handle_Connection(echosocket, relayIP, relayPort):
 # Method to create a new relay server
 def Relay_Server(relayIP, relayPort):
     relaysocket = Create_Socket(relayIP, relayPort)
+
+    running = 1
+    while running:
+        # Accept the cpnnectopm
+        echosocket, echoaddr = relaysocket.accept()
+
+        # generate a new connection
+        thread.start_new_thread(handle_Connection, (echosocket, relayIP, relayPort))
+
+if __name__ == '__main__':
+
+    # Check command line arguments
+    total = len(sys.argv)
+    if total < 3:
+        usage()
+    host = sys.argv[1]
+    port  = int(sys.argv[2])
+    if not port:
+
+    Relay_Server(host, port)
