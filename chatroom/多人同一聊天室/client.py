@@ -2,7 +2,7 @@
 # 由于实验都在本机上运行, 所以server addr == client addr
 import socket,select,threading,sys
 #host = socket.gethostname()
-client_addr = ("0.0.0.0",5963)  # equals server_addr()
+client_addr = ("192.168.214.142",5963)  # equals server_addr()
 
 # 倾听其他成员谈话
 def listening(cs):
