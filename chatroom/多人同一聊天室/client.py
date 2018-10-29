@@ -1,8 +1,8 @@
 #coding=utf-8
 # 由于实验都在本机上运行, 所以server addr == client addr
 import socket,select,threading,sys
-host = socket.gethostname()
-client_addr = (host,5963)  # equals server_addr()
+#host = socket.gethostname()
+client_addr = ("0.0.0.0",5963)  # equals server_addr()
 
 # 倾听其他成员谈话
 def listening(cs):
@@ -48,3 +48,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#s2:192.168.214.140   s1:192.168.214.139  server:192.168.214.142

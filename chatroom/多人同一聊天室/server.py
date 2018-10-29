@@ -9,9 +9,9 @@
 # 而后, server继续监听其他client请求, 而client和server通过socket连接互发data通信
 import socket,select,thread
 
-host = socket.gethostname()
+
 port = 5963
-server_addr = (host,port)
+server_addr = ("0.0.0.0",port)
 
 # waitable的read list, 表示异步通信中可读socket对象的列表
 inputs = []
@@ -28,12 +28,14 @@ def serverInit():
 # 创建一个新的socket连接
 def newConnection(ss):
     client_conn,client_addr = ss.accept()  # 响应一个client的连接请求, 建立一个连接,可以用来传输数据
+    print ("client_conn is %s, client_addr is %s" % (client_conn, client_addr))
     try:
         # 向client端发送欢迎信息
         client_conn.send("welcome to chatroom,pls set up your nick name!")
         client_name = client_conn.recv(1024) #接收client发来的昵称,最大接收字符为1024
         inputs.append(client_conn)
         fd_name[client_conn] = client_name  # 将连接/连接名 加入键值对
+        print ("fd_name list is %s" % fd_name)
         client_conn.send("current members in chatroom are: %s" % fd_name.values())
         # 向所有连接发送新成员加入信息
         for other in fd_name.keys():
