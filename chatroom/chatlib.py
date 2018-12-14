@@ -34,7 +34,7 @@ class Lobby():
     def list_room_id(self, user):
         #檢查目前是否有房間的存在,沒有則發出警報
         if len(self.rooms) == 0:
-            msg = '目前沒有房間的存在,你可以用 [<join> room_name]來創立新房間'
+            msg = '目前沒有房間的存在,你可以用 [<join> room_name]來創立新房間\n'
             user.socket.sendall(msg.encode('utf-8'))
         else:
             msg = '目前現有房間列表\n'
@@ -87,6 +87,7 @@ class Lobby():
 
         elif "<quit>" in msg:
             user.socket.sendall(QUIT_COMMAND.encode('utf-8'))
+            self.remove_user(user)
 
         else:
             #確認user有沒有在房間裡面或者使用者不是房間內排在第一位的user
@@ -99,11 +100,11 @@ class Lobby():
                 user.socket.sendall(msg.encode('utf-8'))
 
         #將user的socket 物件移除
-        def remove_user(self, user):
-            if user.name in self.room_maping:
-                self.rooms[self.room_maping[user.name]].remove_user(user)
-                del self.room_maping[user.name]
-            print ("user: " + user.name + "已經離開\n")
+    def remove_user(self, user):
+        if user.name in self.room_maping:
+            self.rooms[self.room_maping[user.name]].remove_user(user)
+            del self.room_maping[user.name]
+        print ("user: " + user.name + "已經離開\n")
 
 #房間內的事件紀錄
 class RoomFunction():
