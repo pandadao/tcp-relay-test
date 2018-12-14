@@ -15,7 +15,7 @@ python chat-server.py [server-IP]
 python chat-client.py [server-IP]
 ```
 
-###指令：
+### 指令：
 
 輸入上方的指令後你會看到教學指令顯示在終端機上
 Have fun!
