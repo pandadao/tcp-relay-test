@@ -1,4 +1,4 @@
-# -*- coding:utf8 -*-
+# -*- coding:utf-8 -*-
 
 from __future__ import print_function
 import socket
@@ -24,22 +24,25 @@ else:
 
 def prompt():
     print('>', end= ' ', file = sys.stdout.flush())
-
-print("正在連接server\n")
+print("Connecting to server")
 msg_prefix = ''
 
 socket_list = [sys.stdin, connect_to_server]
+#socket_list = [connect_to_server]
+#print("31")
 while True:
+    #print("33")
     r_list, w_list, e_list = select.select(socket_list, [], [])
-    for s in r_list:
-        if s is connect_to_server: #連入的socket
+    #print("35")
+    for s in r_list: #循環判斷是否有client連接近來,如果有client連線的話select會被觸發
+        if s is connect_to_server: #判斷目前觸發的是不是服務端對象,當觸發的對象是服務端對象時,表示有心的client連近來
             msg = s.recv(MSG_BUFFER)
             if not msg:
                 print ("服務中斷")
 
             else:
                 if msg == chatlib.QUIT_COMMAND.encode('utf-8'):
-                    sys.stdout.write('Bye\n')
+                    sys.stdout.write('Bye')
                     sys.exit(2)
 
                 else:

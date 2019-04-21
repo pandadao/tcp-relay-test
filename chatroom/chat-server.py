@@ -30,12 +30,14 @@ while True:
             lobby.new_socket_client(new_user)
 
         else: #新訊息處理
+            print("33")
             msg = user.socket.recv(MSG_BUFFER)
             if msg: #如果有接收到訊息進來
                 msg = msg.decode('utf-8').lower()
                 lobby.handle_msg(user, msg)
 
             else:
+                print ("39")
                 user.socket.close()
                 connection_list.remove(user)
 
