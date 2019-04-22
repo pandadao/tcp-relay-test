@@ -21,6 +21,7 @@ def DealOut(sock):
 def DealIn(sock):
     global inString
     while True:
+        #print nick
         try:
             inString = sock.recv(1024)
             if not inString:
