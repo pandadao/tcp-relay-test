@@ -41,12 +41,13 @@ w_list = []
 e_list = []
 
 
+'''
 def Dealstdin(r_list):
     while True:
         for s in r_list:
             msg = msg_prefix + sys.stdin.readline()
             connect_to_server.sendall(msg.encode('utf-8'))
-
+'''
 
 def Dealstdout(r_list):
     while True:
@@ -68,14 +69,18 @@ def Dealstdout(r_list):
                             msg_prefix = ''
                         prompt()
 
-
+            else:
+                msg = msg_prefix + sys.stdin.readline()
+                connect_to_server.sendall(msg.encode('utf-8'))
 
 
 
 r_list, w_list, e_list = select.select(socket_list, [],[])
 #多线程  接收信息 发送信息
+'''
 thin = threading.Thread(target=Dealstdin,args=(r_list,))#调用threading 创建一个接收信息的线程'
 thin.start()
+'''
 
 thout = threading.Thread(target=Dealstdout,args=(r_list,))#    创建一个发送信息的线程，声明是一个元组
 thout.start()
