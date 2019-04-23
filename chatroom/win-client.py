@@ -35,31 +35,47 @@ nick = ''
 
 socket_list = [connect_to_server]
 
-'''
+
 r_list = []
 w_list = []
 e_list = []
-'''
 
-def Dealstdin(sock):
+
+def Dealstdin(r_list):
     while True:
-        print ("in")
+        for s in r_list:
+            msg = msg_prefix + sys.stdin.readline()
+            connect_to_server.sendall(msg.encode('utf-8'))
 
 
-
-
-
-def Dealstdout(sock):
+def Dealstdout(r_list):
     while True:
-
         for s in r_list:
             if s is connect_to_server:
-                print (s)
+                msg = s.recv(MSG_Buffer)
+                if not msg:
+                    print("服務中斷")
+                else:
+                    if msg == chatlib.QUIT_COMMAND.encode("utf-8"):
+                        sys.stdout.write('Bye')
+                        sys.exit(2)
+
+                    else:
+                        sys.stdout.write(msg.decode('utf-8'))
+                        if 'Please key in your name' in msg.decode('utf-8'):
+                            msg_prefix = 'name: '
+                        else:
+                            msg_prefix = ''
+                        prompt()
+
+
+
+
 
 r_list, w_list, e_list = select.select(socket_list, [],[])
 #多线程  接收信息 发送信息
-thin = threading.Thread(target=DealIn,args=(connect_to_server,))#调用threading 创建一个接收信息的线程'
+thin = threading.Thread(target=Dealstdin,args=(r_list,))#调用threading 创建一个接收信息的线程'
 thin.start()
 
-thout = threading.Thread(target=DealOut,args=(connect_to_server,))#    创建一个发送信息的线程，声明是一个元组
+thout = threading.Thread(target=Dealstdout,args=(r_list,))#    创建一个发送信息的线程，声明是一个元组
 thout.start()
