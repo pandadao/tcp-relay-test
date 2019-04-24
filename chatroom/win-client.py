@@ -1,5 +1,8 @@
 # -*- coding:utf-8 -*-
 
+
+# TODO://client name not transmit to server,所以會造成只有一個user
+
 from __future__ import print_function
 import socket
 import threading
@@ -28,6 +31,7 @@ def prompt():
 
 print("Connecting to server")
 
+global msg_prefix
 msg_prefix = ''
 outString = ''
 inString = ''
@@ -44,36 +48,41 @@ e_list = []
 
 def Dealstdin(r_list):
     while True:
-        for s in r_list:
-            if s is not connect_to_server:
-                msg = msg_prefix + sys.stdin.readline()
-                connect_to_server.sendall(msg.encode('utf-8'))
 
+        msg = msg_prefix + sys.stdin.readline()
+        connect_to_server.sendall(msg.encode('utf-8'))
+
+
+
+def senddata():
+    msg = msg_prefix + sys.stdin.readline()
+    connect_to_server.sendall(msg.encode('utf-8'))
 
 def Dealstdout(r_list):
+    global msg_prefix
     while True:
-        for s in r_list:
-            if s is connect_to_server:
+        for s in r_list: #循環判斷是否有client連接近來,如果有client連線的話select會被觸發
+            if s is connect_to_server: #判斷目前觸發的是不是服務端對象,當觸發的對象是服務端對象時,表示有心的client連近來
                 msg = s.recv(MSG_Buffer)
                 if not msg:
-                    print("服務中斷")
+                    print ("服務中斷")
+
                 else:
-                    if msg == chatlib.QUIT_COMMAND.encode("utf-8"):
+                    if msg == chatlib.QUIT_COMMAND.encode('utf-8'):
                         sys.stdout.write('Bye')
                         sys.exit(2)
 
                     else:
                         sys.stdout.write(msg.decode('utf-8'))
-                        if 'Please key in your name' in msg.decode('utf-8'):
-                            msg_prefix = 'name: '
+                        if 'Please keyin your name' in msg.decode('utf-8'):
+                            msg_prefix = 'name: ' #辨識名字
+
                         else:
                             msg_prefix = ''
                         prompt()
-'''
             else:
-                msg = msg_prefix + sys.stdin.readline()
-                connect_to_server.sendall(msg.encode('utf-8'))
-'''
+                senddata()
+
 
 
 r_list, w_list, e_list = select.select(socket_list, [],[])
